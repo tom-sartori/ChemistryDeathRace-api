@@ -7,11 +7,11 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.native -t quarkus/ChemicalPoursuit-srv .
+# docker build -f src/main/docker/Dockerfile.native -t quarkus/ChemicalPursuit-srv .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p 8080:8080 quarkus/ChemicalPoursuit-srv
+# docker run -i --rm -p 8080:8080 quarkus/ChemicalPursuit-srv
 #
 ###
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6

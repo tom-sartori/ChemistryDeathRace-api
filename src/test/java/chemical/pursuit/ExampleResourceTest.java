@@ -1,4 +1,4 @@
-package chemical.poursuit;
+package chemical.pursuit;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;

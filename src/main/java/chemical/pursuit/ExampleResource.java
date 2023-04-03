@@ -1,4 +1,4 @@
-package chemical.poursuit;
+package chemical.pursuit;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
