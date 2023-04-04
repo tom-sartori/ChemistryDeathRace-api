@@ -51,6 +51,28 @@ public class QuestionResource {
                 .build();
     }
 
+    @GET
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/category")
+    public Response readCategories() {
+        return Response
+                .status(Response.Status.OK)
+                .entity(questionRepository.findAllCategories())
+                .build();
+    }
+
+    @GET
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/category/{category}")
+    public Response read(@PathParam("category") String category) {
+        return Response
+                .status(Response.Status.OK)
+                .entity(questionRepository.findByCategory(category))
+                .build();
+    }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -60,6 +82,18 @@ public class QuestionResource {
         return Response
                 .status(Response.Status.OK)
                 .entity(question)
+                .build();
+    }
+
+    @PUT
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/category/{category}")
+    public Response updateAll(@PathParam("category") String oldCategoryValue, String newCategoryValue) {
+        questionRepository.updateAllCategories(oldCategoryValue, newCategoryValue);
+        return Response
+                .status(Response.Status.OK)
+                .entity(questionRepository.findAllCategories())
                 .build();
     }
 
