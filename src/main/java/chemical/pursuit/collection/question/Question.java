@@ -14,6 +14,7 @@ public class Question {
     private String name;
     private List<Proposition> propositions;
     private String category;
+    private String difficulty;
     private String image;
 
     public Question() {
@@ -51,6 +52,14 @@ public class Question {
         this.category = category;
     }
 
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
     public String getImage() {
         return image;
     }
@@ -64,11 +73,11 @@ public class Question {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Question question = (Question) o;
-        return Objects.equals(id, question.id) && Objects.equals(name, question.name) && Objects.equals(propositions, question.propositions) && Objects.equals(category, question.category) && Objects.equals(image, question.image);
+        return Objects.equals(id, question.id) && Objects.equals(name, question.name) && Objects.equals(propositions, question.propositions) && Objects.equals(category, question.category) && Objects.equals(difficulty, question.difficulty) && Objects.equals(image, question.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, propositions, category, image);
+        return Objects.hash(id, name, propositions, category, difficulty, image);
     }
 }

@@ -47,6 +47,14 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
                 .collect(toList());
     }
 
+    public List<String> findAllCategoriesByDifficulty(String difficulty) {
+        return streamAll()
+                .filter(question -> question.getDifficulty().equals(difficulty))
+                .map(Question::getCategory)
+                .distinct()
+                .collect(toList());
+    }
+
     public void updateAllCategories(String oldCategoryValue, String newCategoryValue) {
         if (oldCategoryValue.equals(newCategoryValue)) {
             throw new BadRequestException("Old and new category values are the same. ");
@@ -58,5 +66,25 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
 
     public List<Question> findByCategory(String category) {
         return list("category", category);
+    }
+
+    public List<String> findAllDifficulties() {
+        return streamAll()
+                .map(Question::getDifficulty)
+                .distinct()
+                .collect(toList());
+    }
+
+    public List<Question> findByDifficulty(String difficulty) {
+        return list("difficulty", difficulty);
+    }
+
+    public void updateAllDifficulties(String oldDifficultyValue, String newDifficultyValue) {
+        if (oldDifficultyValue.equals(newDifficultyValue)) {
+            throw new BadRequestException("Old and new difficulty values are the same. ");
+        }
+        else if (update("category", newDifficultyValue).where("difficulty", oldDifficultyValue) == 0) {
+            throw new NotFoundException("No question with difficulty " + oldDifficultyValue + " found. ");
+        }
     }
 }

@@ -3,11 +3,14 @@ package chemical.pursuit.resource;
 import chemical.pursuit.collection.question.Question;
 import chemical.pursuit.constant.Paths;
 import chemical.pursuit.repository.QuestionRepository;
+import chemical.pursuit.service.FirebaseAuthService;
 import org.bson.types.ObjectId;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -18,11 +21,14 @@ public class QuestionResource {
     @Inject
     QuestionRepository questionRepository;
 
+    @Inject
+    FirebaseAuthService authService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(Question question) {
+    public Response create(Question question, @Context HttpHeaders httpHeaders) {
+        authService.verifyIdToken(httpHeaders);
         questionRepository.persist(question);
         return Response
                 .status(Response.Status.CREATED)
@@ -65,11 +71,44 @@ public class QuestionResource {
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/category/difficulty/{difficulty}")
+    public Response readCategoriesByDifficulty(@PathParam("difficulty") String difficulty) {
+        return Response
+                .status(Response.Status.OK)
+                .entity(questionRepository.findAllCategoriesByDifficulty(difficulty))
+                .build();
+    }
+
+    @GET
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/category/{category}")
-    public Response read(@PathParam("category") String category) {
+    public Response readCategory(@PathParam("category") String category) {
         return Response
                 .status(Response.Status.OK)
                 .entity(questionRepository.findByCategory(category))
+                .build();
+    }
+
+    @GET
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/difficulty")
+    public Response readDifficulties() {
+        return Response
+                .status(Response.Status.OK)
+                .entity(questionRepository.findAllDifficulties())
+                .build();
+    }
+
+    @GET
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/difficulty/{difficulty}")
+    public Response readDifficulty(@PathParam("difficulty") String difficulty) {
+        return Response
+                .status(Response.Status.OK)
+                .entity(questionRepository.findByDifficulty(difficulty))
                 .build();
     }
 
@@ -77,7 +116,8 @@ public class QuestionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/id/{id}")
-    public Response update(@PathParam("id") ObjectId id, Question question) {
+    public Response update(@PathParam("id") ObjectId id, Question question, @Context HttpHeaders httpHeaders) {
+        authService.verifyIdToken(httpHeaders);
         questionRepository.update(question);
         return Response
                 .status(Response.Status.OK)
@@ -89,7 +129,8 @@ public class QuestionResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/category/{category}")
-    public Response updateAll(@PathParam("category") String oldCategoryValue, String newCategoryValue) {
+    public Response updateAllCategory(@PathParam("category") String oldCategoryValue, String newCategoryValue, @Context HttpHeaders httpHeaders) {
+        authService.verifyIdToken(httpHeaders);
         questionRepository.updateAllCategories(oldCategoryValue, newCategoryValue);
         return Response
                 .status(Response.Status.OK)
@@ -97,11 +138,25 @@ public class QuestionResource {
                 .build();
     }
 
+    @PUT
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/difficulty/{difficulty}")
+    public Response updateAllDifficulty(@PathParam("difficulty") String oldDifficultyValue, String newDifficultyValue, @Context HttpHeaders httpHeaders) {
+        authService.verifyIdToken(httpHeaders);
+        questionRepository.updateAllDifficulties(oldDifficultyValue, newDifficultyValue);
+        return Response
+                .status(Response.Status.OK)
+                .entity(questionRepository.findAllDifficulties())
+                .build();
+    }
+
     @DELETE
     @Consumes(MediaType.WILDCARD)
     @Produces(MediaType.WILDCARD)
     @Path("/id/{id}")
-    public Response delete(@PathParam("id") ObjectId id) {
+    public Response delete(@PathParam("id") ObjectId id, @Context HttpHeaders httpHeaders) {
+        authService.verifyIdToken(httpHeaders);
         questionRepository.deleteById(id);
         return Response
                 .status(Response.Status.NO_CONTENT)
