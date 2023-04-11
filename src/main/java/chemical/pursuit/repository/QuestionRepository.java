@@ -55,17 +55,13 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
                 .collect(toList());
     }
 
-    public void updateAllCategories(String oldCategoryValue, String newCategoryValue) {
+    public void updateAllCategories(String difficulty, String oldCategoryValue, String newCategoryValue) {
         if (oldCategoryValue.equals(newCategoryValue)) {
             throw new BadRequestException("Old and new category values are the same. ");
         }
-        else if (update("category", newCategoryValue).where("category", oldCategoryValue) == 0) {
+        else if (update("category", newCategoryValue).where("difficulty = ?1 and category = ?2", difficulty, oldCategoryValue) == 0) {
             throw new NotFoundException("No question with category " + oldCategoryValue + " found. ");
         }
-    }
-
-    public List<Question> findByCategory(String category) {
-        return list("category", category);
     }
 
     public List<String> findAllDifficulties() {

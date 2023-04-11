@@ -2,33 +2,37 @@ package chemical.pursuit.resource;
 
 import chemical.pursuit.collection.question.Question;
 import chemical.pursuit.constant.Paths;
+import chemical.pursuit.constant.Roles;
 import chemical.pursuit.repository.QuestionRepository;
-import chemical.pursuit.service.FirebaseAuthService;
 import org.bson.types.ObjectId;
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path(Paths.QUESTION)
 @ApplicationScoped
+@SecurityScheme(
+        scheme = "bearer",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT"
+)
 public class QuestionResource {
 
     @Inject
     QuestionRepository questionRepository;
 
-    @Inject
-    FirebaseAuthService authService;
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(Question question, @Context HttpHeaders httpHeaders) {
-        authService.verifyIdToken(httpHeaders);
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
+    public Response create(Question question) {
         questionRepository.persist(question);
         return Response
                 .status(Response.Status.CREATED)
@@ -39,6 +43,7 @@ public class QuestionResource {
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
     public Response read() {
         return Response
                 .status(Response.Status.OK)
@@ -50,6 +55,7 @@ public class QuestionResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/id/{id}")
+    @PermitAll
     public Response read(@PathParam("id") ObjectId id) {
         return Response
                 .status(Response.Status.OK)
@@ -60,18 +66,8 @@ public class QuestionResource {
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/category")
-    public Response readCategories() {
-        return Response
-                .status(Response.Status.OK)
-                .entity(questionRepository.findAllCategories())
-                .build();
-    }
-
-    @GET
-    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/category/difficulty/{difficulty}")
+    @PermitAll
     public Response readCategoriesByDifficulty(@PathParam("difficulty") String difficulty) {
         return Response
                 .status(Response.Status.OK)
@@ -82,18 +78,8 @@ public class QuestionResource {
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/category/{category}")
-    public Response readCategory(@PathParam("category") String category) {
-        return Response
-                .status(Response.Status.OK)
-                .entity(questionRepository.findByCategory(category))
-                .build();
-    }
-
-    @GET
-    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/difficulty/{difficulty}/category/{category}")
+    @PermitAll
     public Response readCategory(@PathParam("difficulty") String difficulty, @PathParam("category") String category) {
         return Response
                 .status(Response.Status.OK)
@@ -105,6 +91,7 @@ public class QuestionResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/difficulty")
+    @PermitAll
     public Response readDifficulties() {
         return Response
                 .status(Response.Status.OK)
@@ -116,6 +103,7 @@ public class QuestionResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/difficulty/{difficulty}")
+    @PermitAll
     public Response readDifficulty(@PathParam("difficulty") String difficulty) {
         return Response
                 .status(Response.Status.OK)
@@ -127,8 +115,8 @@ public class QuestionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/id/{id}")
-    public Response update(@PathParam("id") ObjectId id, Question question, @Context HttpHeaders httpHeaders) {
-        authService.verifyIdToken(httpHeaders);
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
+    public Response update(@PathParam("id") ObjectId id, Question question) {
         questionRepository.update(question);
         return Response
                 .status(Response.Status.OK)
@@ -139,10 +127,10 @@ public class QuestionResource {
     @PUT
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/category/{category}")
-    public Response updateAllCategory(@PathParam("category") String oldCategoryValue, String newCategoryValue, @Context HttpHeaders httpHeaders) {
-        authService.verifyIdToken(httpHeaders);
-        questionRepository.updateAllCategories(oldCategoryValue, newCategoryValue);
+    @Path("/difficulty/{difficulty}/category/{category}")
+    @RolesAllowed(Roles.ADMIN)
+    public Response updateAllCategory(@PathParam("difficulty") String difficulty, @PathParam("category") String oldCategoryValue, String newCategoryValue) {
+        questionRepository.updateAllCategories(difficulty, oldCategoryValue, newCategoryValue);
         return Response
                 .status(Response.Status.OK)
                 .entity(questionRepository.findAllCategories())
@@ -153,8 +141,8 @@ public class QuestionResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/difficulty/{difficulty}")
-    public Response updateAllDifficulty(@PathParam("difficulty") String oldDifficultyValue, String newDifficultyValue, @Context HttpHeaders httpHeaders) {
-        authService.verifyIdToken(httpHeaders);
+    @RolesAllowed(Roles.ADMIN)
+    public Response updateAllDifficulty(@PathParam("difficulty") String oldDifficultyValue, String newDifficultyValue) {
         questionRepository.updateAllDifficulties(oldDifficultyValue, newDifficultyValue);
         return Response
                 .status(Response.Status.OK)
@@ -166,8 +154,8 @@ public class QuestionResource {
     @Consumes(MediaType.WILDCARD)
     @Produces(MediaType.WILDCARD)
     @Path("/id/{id}")
-    public Response delete(@PathParam("id") ObjectId id, @Context HttpHeaders httpHeaders) {
-        authService.verifyIdToken(httpHeaders);
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
+    public Response delete(@PathParam("id") ObjectId id) {
         questionRepository.deleteById(id);
         return Response
                 .status(Response.Status.NO_CONTENT)
