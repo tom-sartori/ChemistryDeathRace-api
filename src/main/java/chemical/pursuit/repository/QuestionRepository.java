@@ -87,4 +87,11 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
             throw new NotFoundException("No question with difficulty " + oldDifficultyValue + " found. ");
         }
     }
+
+    public List<Question> listAll(String difficulty, String category) {
+        return streamAll()
+                .filter(question -> question.getDifficulty().equals(difficulty))
+                .filter(question -> question.getCategory().equals(category))
+                .collect(toList());
+    }
 }

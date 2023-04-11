@@ -93,6 +93,17 @@ public class QuestionResource {
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/difficulty/{difficulty}/category/{category}")
+    public Response readCategory(@PathParam("difficulty") String difficulty, @PathParam("category") String category) {
+        return Response
+                .status(Response.Status.OK)
+                .entity(questionRepository.listAll(difficulty, category))
+                .build();
+    }
+
+    @GET
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/difficulty")
     public Response readDifficulties() {
         return Response
