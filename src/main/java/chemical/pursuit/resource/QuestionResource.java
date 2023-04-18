@@ -19,7 +19,8 @@ import javax.ws.rs.core.Response;
 @Path(Paths.QUESTION)
 @ApplicationScoped
 @SecurityScheme(
-        scheme = "bearer",
+        securitySchemeName = "jwt",
+        scheme = "Bearer",
         type = SecuritySchemeType.HTTP,
         bearerFormat = "JWT"
 )
