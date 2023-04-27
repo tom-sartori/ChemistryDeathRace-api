@@ -71,6 +71,14 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
                 .collect(toList());
     }
 
+    public List<String> findAvailableDifficulties() {
+        return streamAll()
+                .map(Question::getDifficulty)
+                .distinct()
+                .filter(difficulty -> findAllCategoriesByDifficulty(difficulty).size() == 6)
+                .collect(toList());
+    }
+
     public List<Question> findByDifficulty(String difficulty) {
         return list("difficulty", difficulty);
     }
