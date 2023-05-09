@@ -87,7 +87,7 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
         if (oldDifficultyValue.equals(newDifficultyValue)) {
             throw new BadRequestException("Old and new difficulty values are the same. ");
         }
-        else if (update("category", newDifficultyValue).where("difficulty", oldDifficultyValue) == 0) {
+        else if (update("difficulty", newDifficultyValue).where("difficulty", oldDifficultyValue) == 0) {
             throw new NotFoundException("No question with difficulty " + oldDifficultyValue + " found. ");
         }
     }
