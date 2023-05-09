@@ -18,7 +18,7 @@ public class QuestionService {
 
     public boolean isValid(Question question) {
         ifNullThrowBadRequestException(question.getName(), "Name is required. ");
-        if (!isCategoryValid(question.getCategory())) {
+        if (!isCategoryValid(question.getDifficulty(), question.getCategory())) {
             throw new BadRequestException("Category is not valid. ");
         }
         if (question.getPropositions().size() < 1 || Constants.MAX_NUMBER_OF_PROPOSITION < question.getPropositions().size()) {
@@ -37,10 +37,10 @@ public class QuestionService {
         }
     }
 
-    private boolean isCategoryValid(String category) {
+    private boolean isCategoryValid(String difficulty, String category) {
         ifNullThrowBadRequestException(category, "Category is required. ");
 
-        List<String> allCategories = questionRepository.findAllCategories();
+        List<String> allCategories = questionRepository.findAllCategoriesByDifficulty(difficulty);
         if (allCategories.size() < Constants.MAX_NUMBER_OF_CATEGORY) {
             return true;
         }

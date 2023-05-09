@@ -47,16 +47,55 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
                 .collect(toList());
     }
 
-    public void updateAllCategories(String oldCategoryValue, String newCategoryValue) {
+    public List<String> findAllCategoriesByDifficulty(String difficulty) {
+        return streamAll()
+                .filter(question -> question.getDifficulty().equals(difficulty))
+                .map(Question::getCategory)
+                .distinct()
+                .collect(toList());
+    }
+
+    public void updateAllCategories(String difficulty, String oldCategoryValue, String newCategoryValue) {
         if (oldCategoryValue.equals(newCategoryValue)) {
             throw new BadRequestException("Old and new category values are the same. ");
         }
-        else if (update("category", newCategoryValue).where("category", oldCategoryValue) == 0) {
+        else if (update("category", newCategoryValue).where("difficulty = ?1 and category = ?2", difficulty, oldCategoryValue) == 0) {
             throw new NotFoundException("No question with category " + oldCategoryValue + " found. ");
         }
     }
 
-    public List<Question> findByCategory(String category) {
-        return list("category", category);
+    public List<String> findAllDifficulties() {
+        return streamAll()
+                .map(Question::getDifficulty)
+                .distinct()
+                .collect(toList());
+    }
+
+    public List<String> findAvailableDifficulties() {
+        return streamAll()
+                .map(Question::getDifficulty)
+                .distinct()
+                .filter(difficulty -> findAllCategoriesByDifficulty(difficulty).size() == 6)
+                .collect(toList());
+    }
+
+    public List<Question> findByDifficulty(String difficulty) {
+        return list("difficulty", difficulty);
+    }
+
+    public void updateAllDifficulties(String oldDifficultyValue, String newDifficultyValue) {
+        if (oldDifficultyValue.equals(newDifficultyValue)) {
+            throw new BadRequestException("Old and new difficulty values are the same. ");
+        }
+        else if (update("difficulty", newDifficultyValue).where("difficulty", oldDifficultyValue) == 0) {
+            throw new NotFoundException("No question with difficulty " + oldDifficultyValue + " found. ");
+        }
+    }
+
+    public List<Question> listAll(String difficulty, String category) {
+        return streamAll()
+                .filter(question -> question.getDifficulty().equals(difficulty))
+                .filter(question -> question.getCategory().equals(category))
+                .collect(toList());
     }
 }
