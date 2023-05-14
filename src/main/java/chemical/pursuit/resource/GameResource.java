@@ -82,7 +82,6 @@ public class GameResource {
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
-//    @RolesAllowed({Roles.ADMIN})
     @PermitAll
     public Response read() {
         return Response
