@@ -4,6 +4,7 @@ import chemical.pursuit.collection.question.Question;
 import chemical.pursuit.service.QuestionService;
 import io.quarkus.mongodb.panache.PanacheMongoRepository;
 import io.quarkus.mongodb.panache.runtime.JavaMongoOperations;
+import io.quarkus.panache.common.Sort;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -80,7 +81,7 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
     }
 
     public List<Question> findByDifficulty(String difficulty) {
-        return list("difficulty", difficulty);
+        return list("difficulty", Sort.ascending("name"), difficulty);
     }
 
     public void updateAllDifficulties(String oldDifficultyValue, String newDifficultyValue) {
@@ -93,7 +94,7 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
     }
 
     public List<Question> listAll(String difficulty, String category) {
-        return streamAll()
+        return streamAll(Sort.ascending("name"))
                 .filter(question -> question.getDifficulty().equals(difficulty))
                 .filter(question -> question.getCategory().equals(category))
                 .collect(toList());
