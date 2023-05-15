@@ -99,7 +99,7 @@ public class GameRepository implements PanacheMongoRepository<Game> {
                 .mapToLong(game -> game.getEndDate().getTime() - game.getStartDate().getTime())
                 .sum();
 
-        return (double) totalTime / games.size();
+        return (double) (games.size() != 0 ? totalTime / games.size() : 0);
     }
 
     public double getAverageDiceSize() {
