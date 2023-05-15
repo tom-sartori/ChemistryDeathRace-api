@@ -90,16 +90,16 @@ public class GameRepository implements PanacheMongoRepository<Game> {
     }
 
     public double getAverageTime() {
-        List<Game> games = listAll();
-        games.forEach(game -> {
-            if (game.getEndDate() == null) {
-                games.remove(game);
-            }
-        });
-        return games.stream()
+        List<Game> games = listAll()
+                .stream()
+                .filter(game -> game.getEndDate() != null)
+                .collect(toList());
+
+        long totalTime = games.stream()
                 .mapToLong(game -> game.getEndDate().getTime() - game.getStartDate().getTime())
-                .average()
-                .orElse(0);
+                .sum();
+
+        return (double) totalTime / games.size();
     }
 
     public double getAverageDiceSize() {
