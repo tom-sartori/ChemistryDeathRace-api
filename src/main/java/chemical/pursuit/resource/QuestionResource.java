@@ -4,6 +4,7 @@ import chemical.pursuit.collection.question.Question;
 import chemical.pursuit.constant.Paths;
 import chemical.pursuit.constant.Roles;
 import chemical.pursuit.repository.QuestionRepository;
+import io.quarkus.panache.common.Sort;
 import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 
 @Path(Paths.QUESTION)
 @ApplicationScoped
@@ -48,7 +50,7 @@ public class QuestionResource {
     public Response read() {
         return Response
                 .status(Response.Status.OK)
-                .entity(questionRepository.listAll())
+                .entity(questionRepository.listAll(Sort.ascending("name")))
                 .build();
     }
 
