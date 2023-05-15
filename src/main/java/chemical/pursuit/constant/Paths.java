@@ -7,4 +7,5 @@ public final class Paths {
 
     public static final String QUESTION = "/question";
     public static final String QUESTION_CATEGORY = "/question/category";
+    public static final String GAME = "/game";
 }
