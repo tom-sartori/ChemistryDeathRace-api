@@ -17,6 +17,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * Game ressource used for statistics.
+ */
 @Path(Paths.GAME)
 @ApplicationScoped
 @SecurityScheme(
@@ -30,6 +33,12 @@ public class GameResource {
     @Inject
     GameRepository gameRepository;
 
+    /**
+     * Creates a new game used for statistics.
+     *
+     * @param game the game to create.
+     * @return the created game.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -42,6 +51,13 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Adds an answer to a game.
+     *
+     * @param id the id of the game.
+     * @param answer the answer to add.
+     * @return a 201 response if the answer was added.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,6 +71,12 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Closes a game.
+     *
+     * @param id the id of the game to close.
+     * @return a 201 response if the game was closed.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -67,6 +89,11 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Counts the number of games played.
+     *
+     * @return the number of games played.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -79,6 +106,11 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Get all the games.
+     *
+     * @return all the games.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -90,6 +122,12 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Get a game by its id.
+     *
+     * @param id the id of the game to get.
+     * @return the game with the given id.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -102,6 +140,11 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Get the percentage of correct answers by question.
+     *
+     * @return the percentage of correct answers by question.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -114,6 +157,11 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Get the global percentage of correct answers.
+     *
+     * @return the percentage of correct answers.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.TEXT_PLAIN)
@@ -126,6 +174,11 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Get the average duration of a game.
+     *
+     * @return the average duration of a game.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.TEXT_PLAIN)
@@ -138,6 +191,11 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Get the average dice size chosen by players.
+     *
+     * @return the average dice size chosen by players.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.TEXT_PLAIN)
@@ -150,6 +208,11 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Get the average number of players per game.
+     *
+     * @return the average number of players per game.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.TEXT_PLAIN)
@@ -162,6 +225,11 @@ public class GameResource {
                 .build();
     }
 
+    /**
+     * Get the most played difficulty.
+     *
+     * @return the most played difficulty.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.TEXT_PLAIN)
@@ -173,6 +241,4 @@ public class GameResource {
                 .entity(gameRepository.getMostPlayedDifficulty())
                 .build();
     }
-
-
 }

@@ -13,8 +13,17 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Repository for the Game collection. Used only for statistics.
+ */
 @ApplicationScoped
 public class GameRepository implements PanacheMongoRepository<Game> {
+
+    /**
+     * Add a new game to the database.
+     *
+     * @param game the game to add.
+     */
     public void addGame(Game game) {
         if (game.getStartDate() == null) {
             game.setStartDate(new java.util.Date());
@@ -24,12 +33,23 @@ public class GameRepository implements PanacheMongoRepository<Game> {
         persist(game);
     }
 
+    /**
+     * Close a game by setting the end date and updating the database.
+     *
+     * @param id the id of the game to close.
+     */
     public void closeGame(ObjectId id) {
         Game game = findById(id);
         game.setEndDate(new java.util.Date());
         update(game);
     }
 
+    /**
+     * Add an answer to a game.
+     *
+     * @param id the id of the game to add the answer to.
+     * @param answer the answer to add.
+     */
     public void addAnswer(ObjectId id, Answer answer) {
         Game game = findById(id);
         if (game == null) {
@@ -39,6 +59,11 @@ public class GameRepository implements PanacheMongoRepository<Game> {
         update(game);
     }
 
+    /**
+     * Get statistics about all questions in the database.
+     *
+     * @return a list of statistics.
+     */
     public List<Stat> getPercentageByQuestion() {
         List<Stat> stats = new ArrayList<>();
         QuestionRepository questionRepository = new QuestionRepository();
@@ -61,6 +86,12 @@ public class GameRepository implements PanacheMongoRepository<Game> {
         return stats;
     }
 
+    /**
+     * Get the percentage of correct answers for a question.
+     *
+     * @param questionId the id of the question.
+     * @return the percentage of correct answers.
+     */
     private double getPercentageByQuestion(ObjectId questionId) {
         long correctAnswers = listAll().stream()
                 .flatMap(game -> game.getAnswers().stream())
@@ -76,6 +107,11 @@ public class GameRepository implements PanacheMongoRepository<Game> {
         return (double) correctAnswers / totalAnswers;
     }
 
+    /**
+     * Get the percentage of correct answers for all questions.
+     *
+     * @return the percentage of correct answers.
+     */
     public double getPercentage() {
         List<Game> games = listAll();
         int correctAnswers = (int) games.stream()
@@ -89,6 +125,11 @@ public class GameRepository implements PanacheMongoRepository<Game> {
         return (double) correctAnswers / totalAnswers;
     }
 
+    /**
+     * Get the average duration of a game.
+     *
+     * @return the average duration of a game.
+     */
     public double getAverageTime() {
         List<Game> games = listAll()
                 .stream()
@@ -102,6 +143,11 @@ public class GameRepository implements PanacheMongoRepository<Game> {
         return (double) (games.size() != 0 ? totalTime / games.size() : 0);
     }
 
+    /**
+     * Get the average dice size.
+     *
+     * @return the average dice size.
+     */
     public double getAverageDiceSize() {
         return listAll()
                 .stream()
@@ -110,6 +156,11 @@ public class GameRepository implements PanacheMongoRepository<Game> {
                 .orElse(0);
     }
 
+    /**
+     * Get the most popular difficulty level chosen by players.
+     *
+     * @return the most popular difficulty level.
+     */
     public String getMostPlayedDifficulty() {
         return listAll()
                 .stream()
@@ -130,6 +181,11 @@ public class GameRepository implements PanacheMongoRepository<Game> {
                 .orElse("");
     }
 
+    /**
+     * Get the average number of players per game.
+     *
+     * @return the average number of players per game.
+     */
     public double getAveragePlayersNumber() {
         return listAll()
                 .stream()

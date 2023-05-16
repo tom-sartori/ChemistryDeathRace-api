@@ -6,8 +6,13 @@ import io.quarkus.security.UnauthorizedException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 import java.util.Arrays;
 
+/**
+ * Exception mapper for {@link UnauthorizedException}.
+ */
+@Provider
 public class UnauthorizedExceptionMapper implements ExceptionMapper<UnauthorizedException> {
 
     @Override

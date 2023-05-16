@@ -16,6 +16,16 @@ public class QuestionService {
     @Inject
     QuestionRepository questionRepository;
 
+    /**
+     * Check if the question is valid. A question is valid if:
+     * - it has a name.
+     * - it has a category.
+     * - it has between 1 and 4 propositions.
+     * - it has exactly one correct proposition.
+     *
+     * @param question The question to check.
+     * @return true if the question is valid.
+     */
     public boolean isValid(Question question) {
         ifNullThrowBadRequestException(question.getName(), "Name is required. ");
         if (!isCategoryValid(question.getDifficulty(), question.getCategory())) {
@@ -31,12 +41,27 @@ public class QuestionService {
         return true;
     }
 
+    /**
+     * Throw a BadRequestException if the value is null or empty.
+     *
+     * @param value The value to check.
+     * @param message The message to display if the value is null or empty.
+     */
     private void ifNullThrowBadRequestException(String value, String message) {
         if (value == null || value.isEmpty()) {
             throw new BadRequestException(message);
         }
     }
 
+    /**
+     * Check if the category is valid. A category is valid if:
+     * - it is not null or empty.
+     * - it is not already used for the given difficulty.
+     *
+     * @param difficulty The difficulty of the question.
+     * @param category The category to check.
+     * @return true if the category is valid.
+     */
     private boolean isCategoryValid(String difficulty, String category) {
         ifNullThrowBadRequestException(category, "Category is required. ");
 

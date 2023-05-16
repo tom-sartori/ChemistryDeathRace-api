@@ -30,6 +30,12 @@ public class QuestionResource {
     @Inject
     QuestionRepository questionRepository;
 
+    /**
+     * Create a new question.
+     *
+     * @param question The question to create.
+     * @return 201 Created if the question was created successfully.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -42,6 +48,11 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Read all questions ordered by name.
+     *
+     * @return 200 OK if the questions were read successfully.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -53,6 +64,12 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Read a question by id.
+     *
+     * @param id The id of the question to read.
+     * @return 200 OK if the question was read successfully.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -65,6 +82,12 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Real all categories for a given difficulty.
+     *
+     * @param difficulty The difficulty to read categories for.
+     * @return 200 OK if the categories were read successfully.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -77,6 +100,13 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Read all questions for a given difficulty and category.
+     *
+     * @param difficulty the difficulty to read questions for.
+     * @param category the category to read questions for.
+     * @return 200 OK if the questions were read successfully.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -89,6 +119,11 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Read all difficulties.
+     *
+     * @return 200 OK if the difficulties were read successfully.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -101,6 +136,11 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Read all available difficulties. A difficulty is available if it has at least 6 categories.
+     *
+     * @return 200 OK if the available difficulties were read successfully.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -113,6 +153,12 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Read all questions for a given difficulty.
+     *
+     * @param difficulty The difficulty to read questions for.
+     * @return 200 OK if the questions were read successfully.
+     */
     @GET
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
@@ -125,6 +171,13 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Update a question.
+     *
+     * @param id The id of the question to update.
+     * @param question The updated question.
+     * @return 200 OK if the question was updated successfully.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -138,6 +191,14 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Update a category.
+     *
+     * @param difficulty The difficulty of the category to update.
+     * @param oldCategoryValue The old category value.
+     * @param newCategoryValue The new category value.
+     * @return 200 OK if the category was updated successfully.
+     */
     @PUT
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
@@ -151,6 +212,13 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Update a difficulty.
+     *
+     * @param oldDifficultyValue The old difficulty value.
+     * @param newDifficultyValue The new difficulty value.
+     * @return 200 OK if the difficulty was updated successfully.
+     */
     @PUT
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
@@ -164,6 +232,11 @@ public class QuestionResource {
                 .build();
     }
 
+    /**
+     * Delete a question by id.
+     *
+     * @return a 204 No Content response if the question was deleted successfully.
+     */
     @DELETE
     @Consumes(MediaType.WILDCARD)
     @Produces(MediaType.WILDCARD)
