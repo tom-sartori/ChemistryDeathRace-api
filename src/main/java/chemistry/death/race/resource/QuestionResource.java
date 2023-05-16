@@ -73,7 +73,7 @@ public class QuestionResource {
     public Response readCategoriesByDifficulty(@PathParam("difficulty") String difficulty) {
         return Response
                 .status(Response.Status.OK)
-                .entity(questionRepository.findAllCategoriesByDifficulty(difficulty))
+                .entity(questionRepository.findAllCategoriesByDifficulty(urlDecodeParameter(difficulty)))
                 .build();
     }
 
@@ -85,7 +85,7 @@ public class QuestionResource {
     public Response readCategory(@PathParam("difficulty") String difficulty, @PathParam("category") String category) {
         return Response
                 .status(Response.Status.OK)
-                .entity(questionRepository.listAll(difficulty, category))
+                .entity(questionRepository.listAll(urlDecodeParameter(difficulty), urlDecodeParameter(category)))
                 .build();
     }
 
@@ -121,7 +121,7 @@ public class QuestionResource {
     public Response readDifficulty(@PathParam("difficulty") String difficulty) {
         return Response
                 .status(Response.Status.OK)
-                .entity(questionRepository.findByDifficulty(difficulty))
+                .entity(questionRepository.findByDifficulty(urlDecodeParameter(difficulty)))
                 .build();
     }
 
@@ -144,7 +144,7 @@ public class QuestionResource {
     @Path("/difficulty/{difficulty}/category/{category}")
     @RolesAllowed(Roles.ADMIN)
     public Response updateAllCategory(@PathParam("difficulty") String difficulty, @PathParam("category") String oldCategoryValue, String newCategoryValue) {
-        questionRepository.updateAllCategories(difficulty, oldCategoryValue, newCategoryValue);
+        questionRepository.updateAllCategories(urlDecodeParameter(difficulty), urlDecodeParameter(oldCategoryValue), newCategoryValue);
         return Response
                 .status(Response.Status.OK)
                 .entity(questionRepository.findAllCategories())
@@ -157,7 +157,7 @@ public class QuestionResource {
     @Path("/difficulty/{difficulty}")
     @RolesAllowed(Roles.ADMIN)
     public Response updateAllDifficulty(@PathParam("difficulty") String oldDifficultyValue, String newDifficultyValue) {
-        questionRepository.updateAllDifficulties(oldDifficultyValue, newDifficultyValue);
+        questionRepository.updateAllDifficulties(urlDecodeParameter(oldDifficultyValue), newDifficultyValue);
         return Response
                 .status(Response.Status.OK)
                 .entity(questionRepository.findAllDifficulties())
@@ -174,5 +174,9 @@ public class QuestionResource {
         return Response
                 .status(Response.Status.NO_CONTENT)
                 .build();
+    }
+
+    private String urlDecodeParameter(String parameter) {
+        return parameter.replace("_", " ");
     }
 }
