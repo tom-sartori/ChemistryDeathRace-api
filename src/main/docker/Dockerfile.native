@@ -7,11 +7,11 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.native -t quarkus/ChemistryDeathRace-srv .
+# docker build -f src/main/docker/Dockerfile.native -t quarkus/ChemistryDeathRace-api .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p 8080:8080 quarkus/ChemistryDeathRace-srv
+# docker run -i --rm -p 8080:8080 quarkus/ChemistryDeathRace-api
 #
 ###
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6

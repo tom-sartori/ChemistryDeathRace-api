@@ -10,11 +10,11 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.native-micro -t quarkus/ChemistryDeathRace-srv .
+# docker build -f src/main/docker/Dockerfile.native-micro -t quarkus/ChemistryDeathRace-api .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p 8080:8080 quarkus/ChemistryDeathRace-srv
+# docker run -i --rm -p 8080:8080 quarkus/ChemistryDeathRace-api
 #
 ###
 FROM quay.io/quarkus/quarkus-micro-image:2.0
