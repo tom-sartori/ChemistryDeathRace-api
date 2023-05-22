@@ -8,6 +8,7 @@ import io.quarkus.mongodb.panache.PanacheMongoRepository;
 import org.bson.types.ObjectId;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,9 @@ import static java.util.stream.Collectors.toList;
  */
 @ApplicationScoped
 public class GameRepository implements PanacheMongoRepository<Game> {
+
+    @Inject
+    QuestionRepository questionRepository;
 
     /**
      * Add a new game to the database.
@@ -66,17 +70,18 @@ public class GameRepository implements PanacheMongoRepository<Game> {
      */
     public List<Stat> getPercentageByQuestion() {
         List<Stat> stats = new ArrayList<>();
-        QuestionRepository questionRepository = new QuestionRepository();
         List<ObjectId> distinctQuestionIds = listAll()
                 .stream()
                 .flatMap(game -> game.getAnswers().stream())
                 .map(Answer::getQuestionId)
                 .distinct()
                 .collect(toList());
-
         distinctQuestionIds.forEach(id -> {
             Stat stat = new Stat();
             Question question = questionRepository.findById(id);
+            if (question == null) {
+                throw new IllegalArgumentException("Question with id " + id + " does not exist");
+            }
             stat.setName(question.getName());
             stat.setDifficulty(question.getDifficulty());
             stat.setPercentage(getPercentageByQuestion(id));
@@ -98,12 +103,10 @@ public class GameRepository implements PanacheMongoRepository<Game> {
                 .filter(answer -> answer.getQuestionId().equals(questionId))
                 .filter(Answer::isCorrect)
                 .count();
-
         long totalAnswers = listAll().stream()
                 .flatMap(game -> game.getAnswers().stream())
                 .filter(answer -> answer.getQuestionId().equals(questionId))
                 .count();
-
         return (double) correctAnswers / totalAnswers;
     }
 
@@ -121,7 +124,6 @@ public class GameRepository implements PanacheMongoRepository<Game> {
         int totalAnswers = (int) games.stream()
                 .mapToLong(game -> game.getAnswers().size())
                 .sum();
-        System.out.println("toto :" + correctAnswers + " " + totalAnswers);
         return (double) correctAnswers / totalAnswers;
     }
 
@@ -192,5 +194,15 @@ public class GameRepository implements PanacheMongoRepository<Game> {
                 .mapToInt(Game::getNumberOfPlayers)
                 .average()
                 .orElse(0);
+    }
+
+    /**
+     * Remove a question from all games played.
+     */
+    public void deleteQuestionFromAllGames(ObjectId id) {
+        listAll().forEach(game -> {
+            game.getAnswers().removeIf(answer -> answer.getQuestionId().equals(id));
+            update(game);
+        });
     }
 }

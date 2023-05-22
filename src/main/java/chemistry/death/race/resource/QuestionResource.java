@@ -243,7 +243,7 @@ public class QuestionResource {
     @Path("/id/{id}")
     @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
     public Response delete(@PathParam("id") ObjectId id) {
-        questionRepository.deleteById(id);
+        questionRepository.deleteQuestionById(id);
         return Response
                 .status(Response.Status.NO_CONTENT)
                 .build();

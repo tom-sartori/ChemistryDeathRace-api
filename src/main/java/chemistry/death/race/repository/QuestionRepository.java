@@ -5,6 +5,7 @@ import chemistry.death.race.service.QuestionService;
 import io.quarkus.mongodb.panache.PanacheMongoRepository;
 import io.quarkus.mongodb.panache.runtime.JavaMongoOperations;
 import io.quarkus.panache.common.Sort;
+import org.bson.types.ObjectId;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,6 +20,9 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
 
     @Inject
     QuestionService questionService;
+
+    @Inject
+    GameRepository gameRepository;
 
 
     /**
@@ -156,5 +160,17 @@ public class QuestionRepository implements PanacheMongoRepository<Question> {
                 .filter(question -> question.getDifficulty().equals(difficulty))
                 .filter(question -> question.getCategory().equals(category))
                 .collect(toList());
+    }
+
+    /**
+     * Delete a question by its id.
+     */
+    public void deleteQuestionById(ObjectId id) {
+        Question question = findById(id);
+        if (question == null) {
+            throw new NotFoundException("No question with id " + id + " found. ");
+        }
+        gameRepository.deleteQuestionFromAllGames(id);
+        deleteById(id);
     }
 }

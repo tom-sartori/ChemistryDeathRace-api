@@ -98,7 +98,7 @@ public class GameResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/played")
-    @RolesAllowed({Roles.ADMIN})
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
     public Response countGamesPlayed() {
         return Response
                 .status(Response.Status.OK)
@@ -132,7 +132,7 @@ public class GameResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/id/{id}")
-    @RolesAllowed({Roles.ADMIN})
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
     public Response read(@PathParam("id") ObjectId id) {
         return Response
                 .status(Response.Status.OK)
@@ -149,7 +149,7 @@ public class GameResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/percentage/question")
-    @RolesAllowed({Roles.ADMIN})
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
     public Response getPercentageByQuestion() {
         return Response
                 .status(Response.Status.OK)
@@ -166,7 +166,7 @@ public class GameResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/percentage")
-    @RolesAllowed({Roles.ADMIN})
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
     public Response getPercentage() {
         return Response
                 .status(Response.Status.OK)
@@ -183,7 +183,7 @@ public class GameResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/average/time")
-    @RolesAllowed({Roles.ADMIN})
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
     public Response getAverageTime() {
         return Response
                 .status(Response.Status.OK)
@@ -200,7 +200,7 @@ public class GameResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/average/dicesize")
-    @RolesAllowed({Roles.ADMIN})
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
     public Response getAverageDiceSize() {
         return Response
                 .status(Response.Status.OK)
@@ -217,7 +217,7 @@ public class GameResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/average/players")
-    @RolesAllowed({Roles.ADMIN})
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
     public Response getAveragePlayersNumber() {
         return Response
                 .status(Response.Status.OK)
@@ -234,7 +234,7 @@ public class GameResource {
     @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/most/played/difficulty")
-    @RolesAllowed({Roles.ADMIN})
+    @RolesAllowed({Roles.ADMIN, Roles.CONTRIBUTOR})
     public Response getMostPlayedDifficulty() {
         return Response
                 .status(Response.Status.OK)
