@@ -241,4 +241,19 @@ public class GameResource {
                 .entity(gameRepository.getMostPlayedDifficulty())
                 .build();
     }
+
+    /**
+     * Drop the collection.
+     */
+    @DELETE
+    @Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    @Produces(MediaType.MEDIA_TYPE_WILDCARD)
+    @Path("/drop")
+    @RolesAllowed({Roles.ADMIN})
+    public Response drop() {
+        gameRepository.mongoCollection().drop();
+        return Response
+                .status(Response.Status.OK)
+                .build();
+    }
 }

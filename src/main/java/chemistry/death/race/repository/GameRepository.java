@@ -124,7 +124,7 @@ public class GameRepository implements PanacheMongoRepository<Game> {
         int totalAnswers = (int) games.stream()
                 .mapToLong(game -> game.getAnswers().size())
                 .sum();
-        return (double) correctAnswers / totalAnswers;
+        return  totalAnswers != 0 ? (double) correctAnswers / totalAnswers : 0;
     }
 
     /**
@@ -180,7 +180,7 @@ public class GameRepository implements PanacheMongoRepository<Game> {
                     }
                     return count1 - count2;
                 })
-                .orElse("");
+                .orElse("0");
     }
 
     /**
